@@ -44,21 +44,21 @@ def plot_mnist(images, shape):
         plt.yticks(np.array([]))
     plt.show()
     
-def plot_graphs(log, tpe='loss'):
+def plot_graphs(log, tpe='loss', start_epoch=1, title=''):
     keys = log.keys()
-    logs = {k:[z for z in zip(*log[k])] for k in keys}
-    epochs = {k:range(len(log[k])) for k in keys}
+    logs = {k:[z[start_epoch-1:] for z in zip(*log[k])] for k in keys}
+    epochs = {k:range(1, len(log[k]) + 1 - (start_epoch-1)) for k in keys}
     
     if tpe == 'loss':
         handlers, = zip(*[plt.plot(epochs[k], logs[k][0], label=k) for k in keys])
-        plt.title('errors')
+        plt.title(f'errors ({title})')
         plt.xlabel('epoch')
         plt.ylabel('error')
         plt.legend(handles=handlers)
         plt.show()
     elif tpe == 'accuracy':
         handlers, = zip(*[plt.plot(epochs[k], logs[k][1], label=k) for k in log.keys()])
-        plt.title('accuracy')
+        plt.title(f'accuracy ({title})')
         plt.xlabel('epoch')
         plt.ylabel('accuracy')
         plt.legend(handles=handlers)
